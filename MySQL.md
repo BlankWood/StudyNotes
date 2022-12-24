@@ -902,7 +902,7 @@ commit;
 | 不可重复读  | 一个事务先后读取同一条记录，但两次读取的数据不同  |
 | 幻读  | 一个事务按照条件查询数据时，没有对应的数据行，但是再插入数据时，又发现这行数据已经存在  |
 
-> 这三个问题的详细演示：https://www.bilibili.com/video/BV1Kr4y1i7ru?p=55cd 
+> 这三个问题的详细演示：https://www.bilibili.com/video/BV1Kr4y1i7ru?p=55&vd_source=1a331f1dcf57697606b55b13be3078a0
 
 并发事务隔离级别：
 
@@ -916,10 +916,10 @@ commit;
 - √表示在当前隔离级别下该问题会出现
 - Serializable 性能最低；Read uncommitted 性能最高，数据安全性最差
 
-查看事务隔离级别：
-`SELECT @@TRANSACTION_ISOLATION;`
-设置事务隔离级别：
-`SET [ SESSION | GLOBAL ] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SERIALIZABLE };`
+查看事务隔离级别：  
+`SELECT @@TRANSACTION_ISOLATION;`  
+设置事务隔离级别：  
+`SET [ SESSION | GLOBAL ] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SERIALIZABLE };`  
 SESSION 是会话级别，表示只针对当前会话有效，GLOBAL 表示对所有会话有效
 
 # 进阶篇
@@ -1474,6 +1474,84 @@ InnoDB 的行锁是针对索引加的锁，不是针对记录加的锁，并且�
 3. 数据独立: 帮用户屏蔽真实表结构变化带来的影响.
 
 ## 存储过程
+
+存储过程是事先经过编译并存储在数据库中的一段SQL语句的集合, 调用存储过程可以简化应用开发人员的很多工作, 减少数据在数据库和应用服务器之间的传输, 对于提高数据处理的效率是有好处的。  
+存储过程即数据库SQL语言层面的代码封装与重用。 
+
+### 基本语法
+
+- 创建：  
+```
+creat procedure <pro_name>([参数列表])
+begin
+	SQL语句
+end;
+```
+创建的存储过程会自动保持在routines文件夹中  
+在命令行创建存储过程时内容中SQL语句的“ ; ”会让创建语句提前结束而报错, 可以通过 `delimiter <任意单个或多个符号> 指定语句结束符号, 再将end后的" ; "替换为设置的符号即可。
+
+- 调用：`call <pro_name>([参数]);`
+
+- 查看：  
+查看指定数据库的存储过程及状态信息  
+`select * from information_schema.routines where routine_schema='xxx';`  
+查看某个存储过程的定义：  
+`show create procedure <pro_name>;`
+
+- 删除： `drop procedure [if exists] <pro_name>;`
+
+### 系统变量
+
+由Mysql服务器提供，分为全局变量(GLOBAL), 会话变量(SESSION).
+
+- 查看系统变量  
+查看所有系统变量: `show [session|global] variables;`  
+模糊匹配查找变量: `show [session|global] variables like '...';`  
+查看指定变量的值: `show @@[session|global] <系统变量名>;`  
+
+- 设置系统变量  
+`set [@@][session|global] <系统变量名> = <值>;`  
+
+### 用户定义变量
+
+用户变量不用提前声明, 通过 @<变量名> 使用  
+
+- 赋值  
+`set @<变量名> [:]= ...;`  
+`select @<变量名> [:]= ...;`  
+`select count(*) into @<变量名> ...;`  
+
+- 查询  
+`select @<变量名>, @<变量名>, ...`
+
+### 局部变量
+
+局部变量是根据需要定义的在局部生效的变量, 访问之前, 需要declear声明。可用作存储过程内的局部变量和输入参数，局部变量的范围是在其声明的Begin...End块。
+
+- 声明：`DECLEAR 变量名 变量类型 [default]`  
+- 赋值：set 或 select ... into 变量名 from ...
+
+### if判断
+```
+if ... then
+
+elseif ... then
+
+else
+
+end if;
+```
+
+### 参数
+
+| 类型 | 含义 |
+| --- | --- |
+| in | 该类参数作为输入，也就是需要调用时传入值 |
+| out | 该类参数作为输出，也就是该参数可以作为返回值 |
+| inout | 既可以作为输入参数，也可以作为输出参数 |
+
+`create procedure p_name([in/out/inout 参数名 参数类型])`  
+`call p_name([传入参数], [@返回值])`  
 
 ## 触发器
 ### 介绍
