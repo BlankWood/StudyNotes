@@ -176,7 +176,12 @@ Git选项 -> '↙'.
 - 附:IDEA集成GitBush作为Terminal  
 设置 -> tools -> terminal ->将"shell path" 改为GitBush路径.
 
+## 个人Github账户
+笔记仓库:  
+https://github.com/BlankWood/study-notes.git
+
 ## 指令一览表
+
 | 指令 | 说明 |
 | --- | --- |
 | git config --global user.name '···' | 创建用户 |
