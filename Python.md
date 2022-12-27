@@ -498,3 +498,366 @@ for element in 列表:
 默认返回函数体的计算结果.
 
 ### 文件读写
+
+#### 打开文件
+
+`open(name, mode, encoding)`  
+- name: 为要打开的目标文件的文件名(包含文件路径)
+- mode: 设置打开文件的模式(访问模式): 只读, 写入, 追加等
+- encoding: 编码格式(推荐UTF-8)
+`f = open("D:/Python.md", "r", encoding="UTF-8")`
+- encoding的顺序并不是第三位(open()的参数非常多), 需要用关键字指定.
+
+| 模式 | 描述 |
+|---- | --- |
+| r | 只读模式(默认) |
+| w | 写入, 原有内容会被删除, 如果不存在, 则先创建文件 |
+| a | 追加, 将新的内容写入末尾, 文件不存在则先创建文件 |
+
+#### 读取文件
+
+- 对同一个文件对象, 多次重复读取时会从上一次结束的位置开始读取, 而不是从头开始.  
+
+| 方法 | 说明 |
+| --- | --- |
+| read(num) | num表示从文件中读取的数据长度(单位:字节), 没有传入num, 表示读取所有数据. |
+| readlines() | 按行的方式读取整个文件的数据, 返回一个列表, 每一行数据为一个元素 |
+| readline() | 读取一行数据 |
+
+```
+f = open("D:/test.txt", "r", encoding="UTF-8")
+t = f.readline()
+for s in t:
+    print(s)
+```
+
+- for循环读取文件
+```
+for line in file:
+    print(line)
+```
+
+#### 关闭文件
+
+如果不关闭文件, 文件会一直程序占用.
+
+`文件对象.close()`
+
+- with open: 执行完成后会自动关闭文件
+```
+with open(...) as f:
+    ...
+    ...
+```
+
+#### 文件写入
+
+`write(...)`: 将内容写入文件(缓存区)  
+`flush()`: 将缓冲区内容真正写入文件(关闭文件也可以完成此操作), 避免频繁操作硬盘, 提升效率.
+
+### 异常
+
+程序中出现的错误, 会使程序无法继续运行, 会退出运行并给出错误信息.
+
+#### 捕获异常
+
+异常(bug)难以预测, 也不可能完全杜绝. 捕获异常能使程序出现异常时能够继续运行, 并进行一定程度的处理.
+
+```
+try:
+    可能出现异常的代码
+except [异常类别 as 异常的名称]:
+    如果出现了异常执行的代码
+else:
+    未出现异常所执行的代码
+finally:
+    无论是否出现异常都会执行的代码
+
+---------示例----------
+
+try:
+    a = 1/0
+except ZeroDivisionError as e:
+    print("0不能作除数")
+    print(f"异常信息: {e}")
+```
+- 指定了异常类别后, 只会捕获指定类别的异常, 多个异常类别写在括号内, 用逗号隔开.  
+- Exception 异常包含了所有异常类别.
+
+#### 异常的传递
+
+出现异常的函数会把异常抛给调用此函数的函数或程序, 调用此函数的函数或程序可以捕获到异常, 不一定需要在出现异常的位置进行捕获.
+
+### 模块
+
+Python 模块(Module), 是一个 Python文件(.py), 里面有已经写好的类, 函数, 变量等, 可以直接导入后使用, 不需要自己写.
+
+#### 导入模块
+
+所有导入语句一般会全都写在文件开头.
+
+`[from 模块名] import [模块 | 类 | 变量 | 函数 | *] [as 别名]`  
+一般用法:
+`import 模块名`  
+`from 模块名 import [类|函数|变量|*]`
+
+只导入模块时使用函数等需要通过: `模块名.函数名()` 的方式, 如果直接导入函数则可以省略模块名直接调用函数.
+
+#### 自定义模块
+
+每一个自己写的python文件都可以作为模块导入到其他文件
+
+- `__name__`: 这是文件自带的变量, 当右键运行程序时变量值会变成 `__main__`, 一般利用此变量隔离自定义模块中的测试调用, 直接写`main`, 回车即可.
+
+- 不同模块的同名功能, 后导入的会覆盖先导入的
+
+### Python包
+
+一个Python包中包含多个模块文件, 用Python包来管理模块文件
+
+#### 导入
+
+`import 包名[.模块名.功能名]`
+
+- `__init__.py`: 有此文件的包才可以被导入, 可以为空, 但不能没有.
+- `__all__`: "\__init__.py"文件中的此变量可以控制 `import *` 时可导入的模块, `__all__ = [模块名]`
+
+#### 安装第三方Python包
+
+需要使用Python内置的pip程序, 使用命令提示符(cmd), 需要先到目录下或添加环境变量, 通过 `pip install 包名` 来下载第三方包.
+
+国外网站下载较慢, 需要指定一个国内网站:  
+`pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名`
+
+编程工具中也有提供下载第三方包的方法(PyCharm):  
+"设置 -> Python Interpreter -> + -> 勾选Option -> -i https://pypi.tuna.tsinghua.edu.cn/simple"
+
+### 数据可视化图表
+
+#### json数据格式
+
+json为一种轻量级的数据交互格式, 按特定格式组织和封装数据, 本质为特定格式的字符串.  
+json在各种编程语言中流通, 进行不同语言数据传递与交互.
+json的格式与Python中的字典一致, 或者是由字典组成的列表.
+
+```
+import json
+
+data = [{"name": "张三", "age": 21}, {"name": "李四", "age": 23}]
+
+# 数据转json, 后一个参数阻止转为ASCII码, 避免中文乱码
+json_str = json.dumps(data[, ensure_ascii=False])
+
+# json转数据
+json_data = json.loads(json_str)
+```
+
+#### pyecharts模块
+
+由百度开源的数据可视化, 官网: `pyecharts.org`, 画廊: `gallery.pyecharts.org`
+
+#### pyecharts入门
+
+`line = Line()`: 获取折线对象.
+
+| 方法 | 说明 |
+| --- | --- |
+| add_xaxis(data) | 添加横坐标, 数据为列表 |
+| add_yaxis(name, data) | 添加纵坐标, name为纵坐标所代表的意义 |
+| reader() | 生成二维折线图 |
+| set_global_opts() | 设置全局配置, 具体使用自行查阅官网 |
+
+`map = Map()`: 获取地图对象.
+
+| 方法 | 说明 |
+| --- | --- |
+| add(name, data, maptype) | name为地图的名字, data格式..., 地图类型默认为中国地图(china) |
+| reader() | 生成地图 |
+| set_global_opts() | 设置全局选项, 具体设置参数请移步官网说明文档 |
+
+`bar = Bar()`: 获取柱状图对象.
+
+| 方法 | 说明 |
+| --- | --- |
+| add_xaxis(data) | 添加x轴数据 |
+| add_yaxis(name, data) | 添加y轴名称与数据 |
+| reversal_axis() | 反转xy轴 |
+
+`timeline = Timeline()`:    时间线对象.  
+`add(Bar, name)`:           将柱状图加入时间线.  
+`add_schema()`:             添加各种模式设置参数.  
+
+
+## 面向对象
+
+类(class), 对某种事物的属性与行为的抽象与封装, 人类, 学生类, 教师类, 动物类, 猫类等.  
+对象: 由类(设计图)创建出来的实体.  
+
+一个类包含:  
+1. 属性, 即定义在类中的变量(成员变量)  
+2. 行为, 即定义在类中的函数(成员方法)
+
+成员方法的定义:  
+`def 方法名(self, 参数...)`  
+self表示类对象本身(相当于c/java的this), 定义时必须写, 调用时可忽略.  
+
+```
+class Student:
+    name = None
+    age = None
+
+    def say_hello(self):
+        print(f"Hello everyone, I'm {self.name}")
+```
+
+创建对象: 变量 = 类名(), `stu = student()`
+
+### 构造方法
+
+在创建对象(构造类)时自动执行的方法, 可以设置参数以便初始化类对象属性.  
+
+构造方法: `def __init__(self, 参数...)`  
+```
+def __init__(self, name, age)
+    self.name = name
+    self.age = age
+```
+
+### 魔术方法
+
+内置的类方法被称之为魔术方法.  
+
+1. `__init__`
+2. `__str__`: 相当于Java的toString, print()(转换成字符串时)时会执行此方法, 未写则会打印地址.  
+3. `__lt__(self, another)`: > 或 < 比较时进行的判定规则.  
+4. `__le__(self, another)`: > = 比较时的判断.  
+5. `__eq__(self, another)`: = 相等比较的判断, 未写时根据地址判断.
+
+### 封装
+
+- 私有成员变量/方法  
+在类中以 "__" 开头的变量/方法即为私有, 私有变量和方法不能在类外部调用, 不可继承, 仅可类内部的各方法自己调用.   
+
+### 继承
+
+继承方式: `class 类名(父类名, 父类2, ...): `, 继承的类被称为子类.  
+继承之后子类拥有父类的**非私有**成员变量与方法, 重名的变量与方法只会保留先继承(继承时靠左边)的那个类.  
+
+- Pass: 如果类内容无需其他内容, 则可以写上Pass, 表示无内容, 防止语法错误.  
+
+#### 复写
+
+复写指子类重新定义父类中已有的属性/方法.  
+
+调用继承的父类变量与方法:  
+1. 父类名.变量/方法(self)
+2. super().变量/方法
+
+#### 变量类型注解
+
+方便第三方工具, 编译器, 程序员等确定参数, 返回值类型. 一般会在不能直接判断出数据类型时进行注解. 注解与实际不符时不会报错.  
+
+- `变量: 数据类型`:  
+```
+a: int = 4
+studentlist: list[Student]
+gradedict: dict[str : int]
+```
+
+- `变量     # type: 数据类型`:  
+```
+var_1 = 6           # type: int
+var_2 = func()      # type: list[str]
+```
+
+#### 函数(方法)类型注解
+
+```
+def add(x: int, y: int) -> int(返回值类型):
+    return x + y
+
+print(add("你好", ", unwelcome"))   # 完全没问题
+```
+
+#### Union类型
+
+`Union(int, str)`: 表示可能是int或str, 用于数据类型注解.  
+
+### 多态
+
+不同子类继承同一个父类时, 都对父类的同一方法进行复写, 此时不同子类调用同一个父类方法, 会得到不同结果.  
+
+```
+class Animal:
+    def speak(self):
+        pass
+
+class Dog(Animal):
+    def speak(self):
+        print("汪汪汪")
+
+class Cat(Animal):
+    def speak(self):
+        print("喵喵喵")
+
+def animalSpeak(animl: animal)
+    animal.speak()
+
+dog = Dog()
+cat = Cat()
+
+animalSpeak(dog)
+animalSpeak(cat)
+```
+
+#### 抽象类与抽象方法
+
+父类只定义方法, 而不具体实现, 交给继承的子类去实现.  
+这样的类与方法就是抽象类与抽象方法.  
+
+#### 接口
+
+只有抽象方法的一个类, 称之为接口.  
+
+## Python连接Mysql
+
+python连接MySQL需要使用第三方库: pymysql.  
+
+```
+from pymysql import Connection
+
+# 获取到Mysql数据库的连接对象
+conn = Connection(
+    host="localhost",   # 主机名(或IP地址)
+    port=3306,          # 端口, 默认3306
+    user="root",        # 账户名
+    password="....",    # 密码
+    [autocommit=Ture]   # 设置自动提交
+)
+
+# 获取游标对象
+cursor = conn.cursor()
+
+# 选择数据库
+conn.select_db("数据库名")
+
+# 执行SQL语句
+cursor.execute(SQL语句)
+
+# 获取查询结果
+result: tuple = cursor.fetchall()
+for roll in result:
+    print(roll)
+
+# 手动提交事务
+conn.commit() 
+
+# 关闭连接
+conn.close()
+```
+
+## PySpark的简单使用
+
+Spark是Apache基金会旗下的顶级开源项目, 用于对海量数据进行大规模分布式计算.PySpark是Spark提供的python第三方库, 用于Spark开发, 也可以将程序提交的Spark集群环境中, 调度大规模集群进行执行.  
+Spark是大数据开发的核心技术.  
+
