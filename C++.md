@@ -56,3 +56,54 @@
 
 5. 
 
+
+
+## 文件读写
+
+通过三个类来操作文件.
+- ofstream: 写文件
+- ifstream: 读文件
+- fstream: 读写文件
+
+### 读写步骤
+
+```
+// 1.包含头文件
+# include<fstream>
+
+// 2.创建流对象
+ofstream ofs;   //写文件
+ifstream ifs;   //读文件
+
+// 3.打开文件
+ofs.open("文件路径", 打开方式 | 打开方式);
+ifs.open("文件路径", 打开方式 | 打开方式);
+
+// 4.1.写文件
+ofs << "写入数据";
+// 4.2.读文件
+// 1.
+char buf[1024] = { 0 };
+if (ifs.is_open()){
+    while(ifs >> buf){
+        cout << buf << endl;
+    }
+}
+// 2.
+string bufstr;
+while( getline(ifs, bufstr)){
+    cout << bufstr << endl;
+}
+
+// 5.关闭文件
+ofs.close();
+```
+
+| 打开方式 | 说明 |
+| --- | --- |
+| ios::in | 读文件 |
+| ios::out | 写文件 |
+| ios::ate | 初始位置: 文件尾 |
+| ios::app | 追加内容 |
+| ios::trunc | 如果文件存在, 则先删除再创建 |
+| ios::binary | 二进制方式 |
