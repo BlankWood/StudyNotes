@@ -117,9 +117,11 @@ doc/**/*.pdf
 
 ## Git远程仓库
 
+远程仓库依赖于代码托管平台, 如GitHub等. 借由其服务器保存代码, 此即远程仓库. 
+
 ### 常用的托管服务(远程仓库)
 - GitHub(https://github.com/)  
-是一个面向开源及私有软件项目的托管平台,因为只支持Git作为唯一的版本库格式进行托管,故名github.
+是一个面向开源及私有软件项目的托管平台,因为只支持Git作为唯一的版本库格式进行托管,故名github. 由于服务器在国外, 访问速度不稳定.  
 - 码云(https://gitee.com/)  
 是国内的一个代码托管平台,由于服务器在国内,所以相比于GitHub,码云速度回更快.
 - GitLab(https://about.gitlab.com/)  
@@ -128,21 +130,24 @@ doc/**/*.pdf
 ### 注册码云和创建远程仓库
 略
 ### 配置ssh公钥
+
+在平台账号中设置本地电脑账户ssh公钥后就可以无需用户名和密码登录. 或者以ssh链接代替hppts链接.  
+
 - 生成SSH公钥
 1. `ssh-keygen -t rsa`
 2. 不断回车(如果公钥以存在,则自动覆盖)
 - 获取公钥:  `cat ~/.ssh/id_rsa.pub`
 - Gitee设置账户公钥:  略
-- 验证是否配置成功:  `ssh -T git@gitee.com`
+- 验证是否配置成功:  `ssh -T <git@gitee.com>`
 
 ### 将本地仓库推至远程仓库
 1. 在gitee网站获取创建的仓库的地址.
-2. 在本地输入命令:`git remote add <远程仓库名(origin)> <地址>`
+2. 在本地输入命令:`git remote add <远程仓库名> <地址>`
+    为远程仓库(网址)起名, 方便推送与拉取等, 以名称代替网址.  
 3. `git remote` :查看远程仓库
-4. `git push [--set-upstream] origin master`:将本地推至远程仓库  
-github 更新后默认分支为main, 所以push指令应改为:  
-`git push -u origin main`  
-`--set-upstream`参数建立本地分支和远端分支的关联,之后可简略写`git push`
+4. `git push [--set-upstream] <远程仓库名> <分支名(master)>`:将本地推至远程仓库  
+    注: github 更新后默认分支为main.  
+    `--set-upstream`参数建立本地分支和远端分支的关联, 之后可简写为`git push`  
 5. `git branch -vv`:查看本地分支与远程分支关联
 
 ### 从远程仓库获取
@@ -151,7 +156,7 @@ github 更新后默认分支为main, 所以push指令应改为:
 | --- | --- |
 | git clon <仓库路径> [本地目录] | 将远程仓库整个下载到本地 |
 | git fetch [remote name] [branch name] | 将远程仓库的更新抓取到本地 |
-| git pull [remote name] [remote name] | 抓取并合并远程与本地分支 |  
+| git pull [remote name] [branch name] | 抓取并合并远程与本地分支 |  
 
 >不指定分支名则默认为所有或是当前.  
 >推至也许会有冲突,需要先抓取远端进行修复合并,再推送至远端.  
@@ -201,9 +206,9 @@ https://github.com/BlankWood/study-notes.git
 | git checkout (-b) <分支名> | (创建并)切换分支 |
 | git merge <分支名> | 将分支合并到目前分支,一般先回到master(主分支) |
 | git branch -d <分支名> | 删除分支,会先做检查,"-D"会不检查强制删除 |
-| git remote add origin <地址> | 创建远程版本库 |
+| git remote add <远程仓库名> <地址> | 创建远程版本库 |
 | git remote | 查看远程仓库 |
-| git push origin master | 上传至远端 |
+| git push <远程仓库名> <分支名> | 将分支上传至远端 |
 | git clon <仓库路径> [本地目录] | 将远程仓库整个下载到本地 |
 | git fetch | 将远程仓库的更新抓取到本地 |
 | git pull | 抓取并合并远程与本地分支 |  
