@@ -629,6 +629,8 @@ Python 模块(Module), 是一个 Python文件(.py), 里面有已经写好的类,
 国外网站下载较慢, 需要指定一个国内网站:  
 `pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名`
 
+永久更换: `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`  
+
 编程工具中也有提供下载第三方包的方法(PyCharm):  
 "设置 -> Python Interpreter -> + -> 勾选Option -> -i https://pypi.tuna.tsinghua.edu.cn/simple"
 
