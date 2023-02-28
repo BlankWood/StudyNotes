@@ -126,7 +126,7 @@ F: studentID -> name, studentID -> gender, studentID -> department
 `SHOW CREATE TABLE 表名;`  
 
 创建表：
-```mysql
+```sql
 CREATE TABLE 表名(
 	字段1 字段1类型 [COMMENT 字段1注释],
 	字段2 字段2类型 [COMMENT 字段2注释],
@@ -170,7 +170,7 @@ CREATE TABLE 表名(
 `INSERT INTO 表名 VALUES (值1, 值2, ...);`
 
 批量添加数据：
-```
+```sql
 INSERT INTO 表名 (字段名1, 字段名2, ...)  
 VALUES (值1, 值2, ...), (值1, 值2, ...), (值1, 值2, ...);
 
@@ -195,7 +195,7 @@ INSERT INTO 表名 VALUES (值1, 值2, ...), (值1, 值2, ...), (值1, 值2, ...
 ### DQL（数据查询语言）
 
 语法：
-```mysql
+```sql
 SELECT
 	字段列表
 FROM
@@ -256,7 +256,7 @@ LIMIT
 | NOT 或 !           | 非，不是                     |
 
 例子：
-```mysql
+```sql
 -- 年龄等于30
 select * from employee where age = 30;
 -- 年龄小于30
@@ -315,7 +315,7 @@ where 和 having 的区别：
 
 例子：
 
-```mysql
+```sql
 -- 根据性别分组，统计男性和女性数量（只显示分组数量，不显示哪个是男哪个是女）
 select count(*) from employee group by gender;
 -- 根据性别分组，统计男性和女性数量
@@ -345,7 +345,7 @@ select workaddress, count(*) address_count from employee where age < 45 group by
 
 例子：
 
-```mysql
+```sql
 -- 根据年龄升序排序
 SELECT * FROM employee ORDER BY age ASC;
 SELECT * FROM employee ORDER BY age;
@@ -364,7 +364,7 @@ SELECT * FROM employee ORDER BY age ASC, entrydate DESC;
 
 例子：
 
-```mysql
+```sql
 -- 查询第一页数据，展示10条
 SELECT * FROM employee LIMIT 0, 10;
 -- 查询第二页
@@ -387,7 +387,7 @@ FROM -> WHERE -> GROUP BY -> SELECT -> ORDER BY -> LIMIT
 
 查询用户：
 
-```mysql
+```sql
 USE mysql;
 SELECT * FROM user;
 ```
@@ -403,7 +403,7 @@ SELECT * FROM user;
 
 例子：
 
-```mysql
+```sql
 -- 创建用户test，只能在当前主机localhost访问
 create user 'test'@'localhost' identified by '123456';
 -- 创建用户test，能在任意主机访问
@@ -494,7 +494,7 @@ drop user 'test'@'localhost';
 
 使用示例：
 
-```mysql
+```sql
 -- 拼接
 SELECT CONCAT('Hello', 'World');
 -- 小写
@@ -540,7 +540,7 @@ SELECT SUBSTRING('Hello World', 1, 5);
 
 例子：
 
-```mysql
+```sql
 -- DATE_ADD
 SELECT DATE_ADD(NOW(), INTERVAL 70 YEAR);
 ```
@@ -558,7 +558,7 @@ SELECT DATE_ADD(NOW(), INTERVAL 70 YEAR);
 
 例子：
 
-```mysql
+```sql
 select
 	name,
 	(case when age > 30 then '中年' else '青年' end)
@@ -603,7 +603,7 @@ from employee;
 
 例子：
 
-```mysql
+```sql
 create table user(
 	id int primary key auto_increment,
 	name varchar(10) not null unique,
@@ -624,7 +624,7 @@ create table user(
 
 添加外键：
 
-```mysql
+```sql
 CREATE TABLE 表名(
 	字段名 字段类型,
 	...
@@ -705,7 +705,7 @@ alter table emp add constraint fk_emp_dept_id foreign key(dept_id) references de
 
 例子：
 
-```mysql
+```sql
 -- 查询员工姓名，及关联的部门的名称
 -- 隐式
 select e.name, d.name from employee as e, dept as d where e.dept = d.id;
@@ -728,7 +728,7 @@ select e.name, d.name from employee as e inner join dept as d on e.dept = d.id;
 
 例子：
 
-```mysql
+```sql
 -- 左
 select e.*, d.name from employee as e left outer join dept as d on e.dept = d.id;
 select d.name, e.* from dept d left outer join emp e on e.dept = d.id;  -- 这条语句与下面的语句效果一样
@@ -749,7 +749,7 @@ select d.name, e.* from employee as e right outer join dept as d on e.dept = d.i
 
 例子：
 
-```mysql
+```sql
 -- 查询员工及其所属领导的名字
 select a.name, b.name from employee a, employee b where a.manager = b.id;
 -- 没有领导的也查询出来
@@ -762,7 +762,7 @@ select a.name, b.name from employee a left join employee b on a.manager = b.id;
 
 语法：
 
-```mysql
+```sql
 SELECT 字段列表 FROM 表A ...
 UNION [ALL]
 SELECT 字段列表 FROM 表B ...
@@ -800,7 +800,7 @@ SQL语句中嵌套SELECT语句，称谓嵌套查询，又称子查询。
 
 例子：
 
-```mysql
+```sql
 -- 查询销售部所有员工
 select id from dept where name = '销售部';
 -- 根据销售部部门ID，查询员工信息
@@ -828,7 +828,7 @@ select * from employee where entrydate > (select entrydate from employee where n
 
 例子：
 
-```mysql
+```sql
 -- 查询销售部和市场部的所有员工信息
 select * from employee where dept in (select id from dept where name = '销售部' or name = '市场部');
 -- 查询比财务部所有人工资都高的员工信息
@@ -844,7 +844,7 @@ select * from employee where salary > any (select salary from employee where dep
 
 例子：
 
-```mysql
+```sql
 -- 查询与xxx的薪资及直属领导相同的员工信息
 select salary, manager from employee where name = 'xxx';
 select * from employee where (salary, manager) = (select salary, manager from employee where name = 'xxx');
@@ -857,7 +857,7 @@ select * from employee where (salary, manager) = (select salary, manager from em
 
 例子：
 
-```mysql
+```sql
 -- 查询与xxx1，xxx2的职位和薪资相同的员工
 select * from employee where (job, salary) in (select job, salary from employee where name = 'xxx1' or name = 'xxx2');
 -- 查询入职日期是2006-01-01之后的员工，及其部门信息
@@ -872,7 +872,7 @@ select e.*, d.* from (select * from employee where entrydate > '2006-01-01') as 
 
 基本操作：
 
-```mysql
+```sql
 -- 1. 查询张三账户余额
 select * from account where name = '张三';
 -- 2. 将张三账户余额-1000
@@ -909,7 +909,7 @@ commit;
 
 操作实例：
 
-```mysql
+```sql
 start transaction;
 select * from account where name = '张三';
 update account set money = money - 1000 where name = '张三';
@@ -1059,7 +1059,7 @@ MySQL体系结构：
 
 相关操作：
 
-```mysql
+```sql
 -- 查询建表语句
 show create table account;
 -- 建表时指定存储引擎
@@ -1326,7 +1326,7 @@ MySQL 索引数据结构对经典的 B+Tree 进行了优化。在原 B+Tree 的�
 
 1\. 以下 SQL 语句，哪个执行效率高？为什么？
 
-```mysql
+```sql
 select * from user where id = 10;
 select * from user where name = 'Arm';
 -- 备注：id为主键，name字段创建的有索引
@@ -1358,7 +1358,7 @@ select * from user where name = 'Arm';
 
 案例：
 
-```mysql
+```sql
 -- name字段为姓名字段，该字段的值可能会重复，为该字段创建索引
 create index idx_user_name on tb_user(name);
 -- phone手机号字段的值非空，且唯一，为该字段创建唯一索引
@@ -1426,7 +1426,7 @@ explain 中 extra 字段含义：
 语法：`create index idx_xxxx on table_name(columnn(n));`  
 前缀长度：可以根据索引的选择性来决定，而选择性是指不重复的索引值（基数）和数据表的记录总数的比值，索引选择性越高则查询效率越高，唯一索引的选择性是1，这是最好的索引选择性，性能也是最好的。  
 求选择性公式：
-```mysql
+```sql
 select count(distinct email) / count(*) from tb_user;
 select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 ```
@@ -1470,13 +1470,14 @@ show index 里面的sub_part可以看到接取的长度
 大批量插入：  
 如果一次性需要插入大批量数据，使用insert语句插入性能较低，此时可以使用MySQL数据库提供的load指令插入。
 
-```mysql
-# 客户端连接服务端时，加上参数 --local-infile（这一行在bash/cmd界面输入）
-mysql --local-infile -u root -p
-# 设置全局参数local_infile为1，开启从本地加载文件导入数据的开关
+```sql
+-- 客户端连接服务端时，加上参数 --local-infile（这一行在bash/cmd界面输入）
+-- mysql --local-infile -u root -p
+
+-- 设置全局参数local_infile为1，开启从本地加载文件导入数据的开关
 set global local_infile = 1;
 select @@local_infile;
-# 执行load指令将准备好的数据，加载到表结构中
+-- 执行load指令将准备好的数据，加载到表结构中
 load data local infile '/root/sql1.log' into table 'tb_user' fields terminated by ',' lines terminated by '\n';
 ```
 
@@ -1526,7 +1527,7 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 
 例如：
 
-```mysql
+```sql
 -- 此语句耗时很长
 select * from tb_sku limit 9000000, 10;
 -- 通过覆盖索引加快速度，直接通过主键索引进行排序及查询
@@ -1607,14 +1608,14 @@ InnoDB 的行锁是针对索引加的锁，不是针对记录加的锁，并且�
 ### 基本语法
 
 - 创建：  
-```
+```sql
 creat procedure <pro_name>([参数列表])
 begin
 	SQL语句
 end;
 ```
 创建的存储过程会自动保持在routines文件夹中  
-在命令行创建存储过程时内容中SQL语句的“ ; ”会让创建语句提前结束而报错, 可以通过 `delimiter <任意单个或多个符号> 指定语句结束符号, 再将end后的" ; "替换为设置的符号即可。
+在命令行创建存储过程时内容中SQL语句的“ ; ”会让创建语句提前结束而报错, 可以通过 `delimiter <任意单个或多个符号> 指定命令行的语句结束符号, 再将end后的" ; "替换为设置的符号即可。
 
 - 调用：`call <pro_name>([参数]);`
 
@@ -1683,8 +1684,8 @@ end if;
 
 语法:  
 1.   
-```
-# case_value为需要判断的变量, value1等为可能的值.
+```sql
+-- case_value为需要判断的变量, value1等为可能的值.
 
 case case_value
 	when when_value1 then statement_list1
@@ -1693,8 +1694,8 @@ case case_value
 end case;
 ```
 2.  
-```
-# condition1等为判断条件
+```sql
+-- condition1等为判断条件
 
 case
 	when search_condition1 then statement_list1
@@ -1704,8 +1705,8 @@ end case;
 ```
 
 例子:  
-```
-# 根据输入的月份判断其所属的季度
+```SQL
+-- 根据输入的月份判断其所属的季度
 
 create procedure p(in month int)
 begin
@@ -1750,15 +1751,15 @@ call p(6);
 
 - loop:  
 	```
-	# loop循环中有两个配套的关键字
-	# leave: 退出循环, (break)
-	# iterate: 直接进行下一次循环, (continue)
+	-- loop循环中有两个配套的关键字
+	-- leave: 退出循环, (break)
+	-- iterate: 直接进行下一次循环, (continue)
 
 	[label:] loop
 		循环体...
 	end loop [label];
 
-	# label相当于循环的名字, leave与iterate 后可跟上 label 明确是哪个循环
+	-- label相当于循环的名字, leave与iterate 后可跟上 label 明确是哪个循环
 	```
 
 ### 游标
@@ -1804,7 +1805,7 @@ call p(6);
 
 存储函数时有返回值的存储过程, 存储函数的参数只能是in类型.  
 
-```
+```sql
 create function 存储函数名称([参数列表])
 returns type [characteristic ...]
 begin
@@ -1837,7 +1838,7 @@ old指**更新/删除**之前的数据,new为**更新/插入**之后的数据.
 
 ### 语法
 创建
-```
+```sql
 create trigger <tigger_name>  
 before/after insert/update/delete  
 on <table_name> for each row  
@@ -1854,7 +1855,7 @@ end;
 `drop tigger [schema_name.]tigger_name; --如果没有指定schema_name,则默认当前数据库.`  
 
 示例:  
-```
+```sql
 -- 在tb_user表中插入数据后在user_logs中插入相关日志信息
 create trigger tb_user_insert_tigger
 	after insert on tb_user for each row
@@ -2463,7 +2464,7 @@ GRANT 和 REVOKE 允许的动态权限
 
 1. 在SQL语句之后加上`\G`会将结果的表格形式转换成行文本形式
 2. 查看Mysql数据库占用空间：
-```mysql
+```sql
 SELECT table_schema "Database Name"
      , SUM(data_length + index_length) / (1024 * 1024) "Database Size in MB"
 FROM information_schema.TABLES
