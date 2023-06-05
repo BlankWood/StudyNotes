@@ -315,6 +315,32 @@ print(result)
 - 函数可嵌套调用。
 - 在函数内定义的变量为局部变量，作用域只有其函数内部。加上关键字 global 可使局部变量声明为全局变量。
 
+
+#### 多返回值
+
+在return时将多个返回值用 "," 隔开, 即可返回多个返回值. 在接收时也需要多个变量接收, 也用 "," 隔开.
+
+#### 多种参数
+
+1. 位置参数: 调用函数时根据函数定义的参数位置来传递参数.
+2. 关键字参数: 函数调用时通过 "键=值" 的形式传递参数, 这样可以不用按写定的顺序传参.  
+`user_info(name='甲', age=19, gender='男')`
+- 位置参数与关键字参数可混用, 传入时位置参数需要在关键字之前.
+3. 缺省参数(默认参数): 在定义函数时设置默认值, 不传入此参数即用默认值, 定义时有默认值的参数需要写在没有默认值参数的后面.
+4. 不定长参数: 在定义函数时在参数前加上 "*" ,表示可接收任意数量的参数, 函数接收后形成元组, 如果加上 "**" ,传入参数应为"key=value"的形式, 函数接收后形成字典.
+
+#### 函数作为参数
+
+函数作参数一般用作对复杂数据类型(类与结构体)的比较规则的定义等, 使调用时自定义比较规则.(个人经验)
+
+- lambda匿名函数  
+
+作为参数的函数一般不会过于复杂,也不会多次调用, 为了简化书写使用匿名函数, 而不用def定义.
+
+- 定义: lambda 传入参数: 函数体(一行代码)  
+默认返回函数体的计算结果.
+
+
 ### 数据容器
 
 可以容纳多份数据的容器。
@@ -486,31 +512,6 @@ for element in 列表:
 2. for循环遍历字典得到key, 取出键值对中的value. 
 
 
-### 函数拓展
-
-#### 多返回值
-
-在return时将多个返回值用 "," 隔开, 即可返回多个返回值. 在接收时也需要多个变量接收, 也用 "," 隔开.
-
-#### 多种参数
-
-1. 位置参数: 调用函数时根据函数定义的参数位置来传递参数.
-2. 关键字参数: 函数调用时通过 "键=值" 的形式传递参数, 这样可以不用按写定的顺序传参.  
-`user_info(name='甲', age=19, gender='男')`
-- 位置参数与关键字参数可混用, 传入时位置参数需要在关键字之前.
-3. 缺省参数(默认参数): 在定义函数时设置默认值, 不传入此参数即用默认值, 定义时有默认值的参数需要写在没有默认值参数的后面.
-4. 不定长参数: 在定义函数时在参数前加上 "*" ,表示可接收任意数量的参数, 函数接收后形成元组, 如果加上 "**" ,传入参数应为"key=value"的形式, 函数接收后形成字典.
-
-#### 函数作为参数
-
-函数作参数一般用作对复杂数据类型(类与结构体)的比较规则的定义等, 使调用时自定义比较规则.(个人经验)
-
-- lambda匿名函数  
-
-作为参数的函数一般不会过于复杂,也不会多次调用, 为了简化书写使用匿名函数, 而不用def定义.
-
-- 定义: lambda 传入参数: 函数体(一行代码)  
-默认返回函数体的计算结果.
 
 ### 文件读写
 
@@ -519,8 +520,9 @@ for element in 列表:
 `open(name, mode, encoding)`  
 - name: 为要打开的目标文件的文件名(包含文件路径)
 - mode: 设置打开文件的模式(访问模式): 只读, 写入, 追加等
-- encoding: 编码格式(推荐UTF-8)
-`f = open("D:/Python.md", "r", encoding="UTF-8")`
+- encoding: 编码格式(推荐UTF-8)  
+
+`f = open("D:/Python.md", "rt", encoding="UTF-8")`
 - encoding的顺序并不是第三位(open()的参数非常多), 需要用关键字指定.
 
 | 模式 | 描述 |
@@ -528,6 +530,8 @@ for element in 列表:
 | r | 只读模式(默认) |
 | w | 写入, 原有内容会被删除, 如果不存在, 则先创建文件 |
 | a | 追加, 将新的内容写入末尾, 文件不存在则先创建文件 |
+| t | 默认, 文本文件, 以文本形式读出, 写入 |
+| b | 二进制文件, 以二进制读出, 写入 |
 
 #### 读取文件
 
@@ -556,7 +560,7 @@ for line in file:
 
 如果不关闭文件, 文件会一直程序占用.
 
-`文件对象.close()`
+`f.close()`
 
 - with open: 执行完成后会自动关闭文件
 ```
@@ -567,8 +571,10 @@ with open(...) as f:
 
 #### 文件写入
 
-`write(...)`: 将内容写入文件(缓存区)  
-`flush()`: 将缓冲区内容真正写入文件(关闭文件也可以完成此操作), 避免频繁操作硬盘, 提升效率.
+`f.write(...)`: 将内容写入文件(缓存区).  
+`f.writelines(...)`.  
+`f.flush()`: 将缓冲区内容真正写入文件(关闭文件也可以完成此操作), 避免频繁操作硬盘, 提升效率.
+
 
 ### 异常
 
@@ -705,7 +711,113 @@ json_data = json.loads(json_str)
 `add_schema()`:             添加各种模式设置参数.  
 
 
-## 面向对象
+## 变量作用域
+
+作用域又可以称为命名空间, 指变量起作用的范围.  
+Python中有四种变量作用域: 局部作用域(Local), 嵌套作用域(Enclosed), 全局作用域(Global), 内置作用域(Built-in).  
+作用域中变量的调用顺序为就近原则: LEGB.  
+
+只有 **模块, 类, 函数** 会在全局作用域中引入新的作用域.  
+
+- 局部作用域:  
+    函数内部即局部作用域, 其内部赋值变量会定义成局部变量(即使此变量名称已在全局变量中), 局部变量不可在函数外部调用.  
+    在函数内(局部作用域内)可调用全局变量(按调用顺序). 但为其赋值视为定义新的局部变量, 而不是改变全局变量. 此时, 不能在赋值前调用此变量, 否则报错.  
+    如果需要在函数内部修改全局变量, 需要先用 global 关键字声明.  
+
+    ```python
+    s = "hello world"
+
+    def test():
+        # print(s)
+        # global s
+        s = "HELLO WORLD"
+        print(s)        
+
+    test()
+    print(s)
+    ```
+
+
+- 嵌套作用域:  
+    指在函数内部定义一个函数, 外层函数的作用域称为嵌套作用域.  
+    内部函数可调用外部函数的变量(调用顺序).  
+
+
+- 全局作用域:  
+    指一个 py 文件内, 或者说是一个模块内.  
+
+
+- 内置作用域:  
+    python 语言内置的模块, 如 print 等关键字.  
+
+
+
+## 常用内置函数
+
+- filter(function, iterable):  
+    用于过滤序列, 即筛选元素, 返回符合条件的新列表.  
+
+    - 参数:    
+        function: 判断函数.  
+        iterable: 可迭代对象.  
+        将容器中的元素传入判断函数, 保留结果为 True 的元素.  
+    
+    - 返回值:  
+        一个容器: filter.  
+
+示例:  
+```python
+num = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+odds = filter(lambda x: x%2==0, num)
+for i in odds:
+    print(i, end=" ")
+```
+
+- eval(express):  
+    执行字符串表达式, 并返回其结果.  
+
+示例:  
+```python
+two = eval("1+1")
+l = eval("[1, 2, 3, 4, 5]")
+def add_ten(x):
+    return x + 10
+
+a = 10
+a = eval("add_ten(a)")
+```
+
+
+- map(function, iterable, ...):  
+    将容器每个元素调用函数, 获取其返回值序列.  
+    即批量处理.  
+
+    - 参数:  
+        function: 此函数的参数数量应与后面的容器个数相同.  
+        iterable: 一个或多个序列, 其大小(size)应一致, 否则按最小size处理.  
+    
+示例:  
+```python
+num_list = list(map(int, input().split()))
+"""
+输入 1 2 3 4 5 6 7 8 等...
+input() 获取输入的字符串后, 用split()分割得到字符串列表.
+通过 map 对其中每一个字符串调用 int 函数转为数字.  
+用 list() 将返回的 map 对象转为列表.  
+"""
+```
+
+- reduce(function, iterable):  
+    在 functools 模块中.  
+    将 iterable 中的元素进行累积: 先将容器中第 1, 2 个元素应用于 func, 再将其结果与第三个元素应用于 func, 以此累积.  
+
+    func 应有两个参数, 一个返回值.  
+
+    `sum = reduce(lambda x, y: [1, 2, 3, 4, 5])`
+
+
+
+## 类与对象
 
 类(class), 对某种事物的属性与行为的抽象与封装, 人类, 学生类, 教师类, 动物类, 猫类等.  
 对象: 由类(设计图)创建出来的实体.  
@@ -740,6 +852,21 @@ def __init__(self, name, age)
     self.age = age
 ```
 
+self 为 __new__方法返回的实例对象, 代表对象的空间. 可以取其他名字(如cls, this), 但一般用self. 其先于 __init__执行.  
+可以通过重写其来实现单例模式.  
+
+对应的有析构方法, 在删除对象(del)时会进行调用.  
+`def __del__(self)`
+
+
+### 类属性与实例属性
+
+类中的属性分为**实例属性**与**类属性**.  
+实例属性为实例对象的属性, 同类不同对象的实例属性不同, 一般全在 __init__方法中定义.  
+类属性为此类共享的属性, 同一个类属性相同, 定义在类的开头.  
+
+
+
 ### 魔术方法
 
 内置的类方法被称之为魔术方法.  
@@ -761,6 +888,13 @@ def __init__(self, name, age)
 继承之后子类拥有父类的**非私有**成员变量与方法, 重名的变量与方法只会保留先继承(继承时靠左边)的那个类.  
 
 - Pass: 如果类内容无需其他内容, 则可以写上Pass, 表示无内容, 防止语法错误.  
+
+python中不存在方法的重载, 后者会覆盖前者.  
+重名的方法与属性的查找(解析)顺序称为 MRO. 采用 C3 算法来得到 MRO.  
+- C3算法:  
+    类C 的MRO记为 L[C] = L(C1, C2, C3 ...). C1 为头, 其余为尾.  
+    如果类C 继承父类 B1, B2,...,BN. L[C(B1, B2,...,BN)] = C + merge(L[B1], L[B2], ... , L[BN], B1, B2,...,BN).  
+    merge: 从前往后, 检查每个元素是否出现在其他元素的尾部. 没有则将其输出, 并在所有元素中删除.  
 
 #### 复写
 
@@ -789,8 +923,8 @@ var_2 = func()      # type: list[str]
 
 #### 函数(方法)类型注解
 
-```
-def add(x: int, y: int) -> int(返回值类型):
+```python
+def add(x: int, y: int) -> int: # 返回值类型
     return x + y
 
 print(add("你好", ", unwelcome"))   # 完全没问题
@@ -804,7 +938,7 @@ print(add("你好", ", unwelcome"))   # 完全没问题
 
 不同子类继承同一个父类时, 都对父类的同一方法进行复写, 此时不同子类调用同一个父类方法, 会得到不同结果.  
 
-```
+```python
 class Animal:
     def speak(self):
         pass
@@ -827,16 +961,152 @@ animalSpeak(dog)
 animalSpeak(cat)
 ```
 
-#### 抽象类与抽象方法
+#### Mixin
 
-父类只定义方法, 而不具体实现, 交给继承的子类去实现.  
-这样的类与方法就是抽象类与抽象方法.  
+通过定义一个共同的基类(父类)来拓展其他类的功能.  
+这种类称为 Mixin类, 一般在继承时放在前面, 避免被覆盖.  
+类似于接口.  
 
-#### 接口
 
-只有抽象方法的一个类, 称之为接口.  
+### 重载构造方法
 
-## Python连接Mysql
+由于 python 不支持方法的重载, 所以不能直接进行重载.  
+虽然也能用不定参数或默认参数, 然后按不同情况进行不同的处理, 但阅读, 维护的难度较大.  
+可以使用装饰器间接进行重载.  [装饰器详解](#装饰器).  
+
+- @classmethod:  
+    @classmethod 允许在不实例化类的情况下访问该方法(类方法).  
+    用于重载时, 此类函数称为工厂方法.  
+
+    在其修饰的方法中加入参数 "cls", cls表示调用该方法的类名, 因此可以通过其调用原本的构造方法, 其名称可更改(不推荐).  
+    其他的参数 parameter2 需要符合构造方法的参数.  
+    
+    ```py
+    @classmethod
+    def func(cls, parameter1):
+        ...
+        return cls(paramete2)
+
+    c = ClassName.func(parameter)
+    ```
+
+
+## 装饰器
+
+在给函数进行功能增强时, 可以使用装饰器. 通过在函数前加上 `@<装饰器名>` 的方式使用.  
+
+
+### 闭包
+
+闭包即在函数内定义函数, 并引用外部函数的变量.  
+
+```python
+def outer(x):
+    def inner(y):
+        return x + y
+    return inner
+
+
+print(outer(3)(4))
+# 调用outer时, 得到返回值inner; 再调用inner得到返回值x+y.  
+```
+
+
+### 装饰器
+
+装饰器即闭包的应用.  
+将原函数作为参数传入, 在内部定义新函数为其添加功能后, 将新函数返回.  
+
+```python
+def outer(func):
+    def inner():
+        print("Before func()...")
+        func()
+        print("After func()...")
+    return inner
+
+
+def hello():
+    print("hello world!")
+
+
+hello = outer(hello)
+# 调用outer得到返回值inner(一个函数), 将其赋值给hello.
+hello()
+
+# 改用装饰器写法
+@outer
+def world():
+    print("hello world!")
+
+
+world()
+```
+
+- 加上参数和返回值:  
+```python
+def test(Instruction):
+    # 接收装饰器参数 Instructions
+    def out_wrapper(func):
+        # 接收函数
+        # @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # 接收函数的参数, 进行功能增强, 并返回函数返回值
+            print(Instruction)
+            result = func(*args, **kwargs)
+            return result
+        # 返回后函数的名字(func.__name__)会变成 "wrapper", 可以用另一个装饰器解决(functools.wraps(func)) ...
+        return wrapper
+
+    return out_wrapper
+
+
+@test(Instruction="func call successfully")
+def add(x, y):
+    return x + y
+
+
+x = add(3, 4)
+print(x)
+```
+
+- 装饰器还可以用类实现, 不一定是函数.  
+```python
+
+class Prompt:
+    def __init__(self, prompt):
+        self.prompt = prompt
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            print(self.prompt)
+            result = func(*args, **kwargs)
+            return result
+
+        return wrapper
+
+
+    # 在初始化中还可以直接加func, 则装饰器本身没有参数
+    # def __init__(self, func):
+    #     self.func = func
+
+    # def __call__(*args, **kwargs):
+    #     return self.func(*args, **kwargs)
+
+
+@Prompt(prompt="time:")
+def print_time(time):
+    print(time)
+
+
+print_time("now")
+```
+
+- 装饰器可以叠加.  
+- 装饰器可以修饰类, 只有在实例化的时候生效一次.  
+
+
+## Mysql
 
 python连接MySQL需要使用第三方库: pymysql.  
 
@@ -873,8 +1143,158 @@ conn.commit()
 conn.close()
 ```
 
-## PySpark的简单使用
+# PySpark的简单使用
 
 Spark是Apache基金会旗下的顶级开源项目, 用于对海量数据进行大规模分布式计算.PySpark是Spark提供的python第三方库, 用于Spark开发, 也可以将程序提交的Spark集群环境中, 调度大规模集群进行执行.  
 Spark是大数据开发的核心技术.  
+
+
+
+
+# python爬虫
+
+
+## 简单的爬虫架构
+
+- 三大模块:  
+    URL管理器: URL队列管理, 防止重复爬取.  
+    网页下载器: 网页内容下载.  
+    网页解析器: 提取价值数据, 提取新的待爬URL.  
+
+
+## requests 库
+
+发送请求:  
+requests.get/post(url,params,data,headers,timeout,verify,allow_redirects,cookies)  
+    - url: 目标网页的URL.  
+    - params: 字典形式, 设置url后面的参数.  
+    - data: 字典或字符串, 一般用于post方法时提交数据.  
+    - headers: 设置user-agent, refer等的请求头.  
+    - timeout: 超时时间, 单位: s.  
+    - verify: 是否进行Https证书验证, 默认Ture.  
+    - allow_redirects: 是否让resquest做重定向, 默认Ture.  
+    - cookies: 附带本地的cookies数据.  
+
+接收响应:  
+```python
+r = requests.get/post(url)
+# 状态码, 200 表示请求成功
+r.statues_code
+# 当前编码 (requests 会根据Headers推测编码, 推测不到则设置为 ISO-8859-1 可能导致乱码)
+r.encoding
+# 返回的网页内容
+r.text
+# 返回的 HTTP 的 headers
+r.headers
+# 实际访问的URL
+r.url
+# 以字节的方式返回内容
+r.content
+# 服务端要写入本地的cookies数据
+r.cookies
+```
+
+- 测试:  
+```python
+import requests
+
+url = "https://www.baidu.com"
+
+r = requests.get(url)
+
+print(r.status_code)
+print(r.headers)
+print(r.encoding)
+# 乱码处理: 一般编码方式在 text 中有写, 把 r(respond)的属性 encoding 更改为对应编码, 再次输出即可.  
+print(r.text)
+r.encoding = "utf-8"
+print(r.text)
+```
+
+## URL管理器
+
+对外接口: 取出一个待爬取URL, 新增待爬取URL.  
+实现逻辑: 取出时状态改成"已爬取", 新增时判断是否已经存在.  
+数据存储: python内存, redis, MySQL. 两个集合(已爬取和待爬取).  
+
+实现:  
+```python
+class UrlManager():
+    """
+    url管理器类
+    """
+
+#   初始化两个 set 集合, 用于存放 待爬取的url 和 已爬取的url
+    def __init__(self):
+        self.new_urls = set()
+        self.old_urls = set()
+
+#   添加 url 至 待爬取 url 集合中
+    def add_new_url(self, url):
+        if url is None or len(url) == 0:
+            return
+        if url in self.new_urls or url in self.old_urls:
+            return
+        self.new_urls.add(url)
+
+#   批量添加 url
+    def add_new_urls(self, urls):
+        if urls is None or len(urls) == 0:
+            return
+        for url in urls:
+            self.new_urls.add(url)
+
+#   取出 url
+    def get_url(self):
+        if not self.isEmpty():
+            url = self.new_urls.pop()
+            self.old_urls.add(url)
+            return url
+        else:
+            return None
+
+    def is_empty(self):
+        return len(self.new_urls) == 0
+
+```
+
+## Beautiful Soup 库
+
+得到的响应数据一般为网页, 需要对其进行解析.  
+因此可以使用 Beautiful Soup 第三方库(beautifulsoup4), 从HTML中提取数据.  
+
+步骤:  
+- 创建 BeautifulSoup 对象  
+    soup = BeautifulSoup(html_doc, 'html.parser', from_encoding)
+    - html_doc: HTML文档字符串.  
+    - features: 解析器, 'html.parser' 为 python 的标准 HTML 解析库.  
+    - from_encoding: 编码格式.  
+
+- 以标签名来搜索节点:  
+    soup.find/find_all(name, attrs, string)  
+    - name: 标签的名称.  
+    - attrs: 字典类型, 根据属性值筛选.  
+    - text: 根据文本内容进行筛选.  
+
+
+## 对目标网站分析
+
+访问网站得到的响应信息分为两种: 网页信息(HTML) 和 json数据.  
+当一个网页的内容较大时, 数据不会一次性全部传输过来, 只会先传输其网页架构等, 即异步加载.  
+其他的, 如视频, 评论等会先贴上存放其的网址, 另传输数据包(json数据).  
+
+对于复杂的网页, 要先对其进行分析, 找到想要的数据的位置.  
+
+进入目标网站, 右键 -> 查看页面源代码/检测.  
+
+在检测中找到 "网络"(network), 刷新页面, 可以看到有大量的数据传送过来.  
+在其中找到数据的位置(抓包).  
+
+在数据的请求头中可以看到其 请求方式(post/get) 和 URL.  
+并对 HTML 或 json 进行分析找到需要的数据的精确位置, 然后才能在编写代码时能够精确地提取出来.  
+
+
+
+
+
 
