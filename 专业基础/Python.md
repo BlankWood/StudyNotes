@@ -1143,6 +1143,63 @@ conn.commit()
 conn.close()
 ```
 
+
+## 重载运算符
+
+python中可以通过重写魔术方法(内置方法)的方式改变运算符的行为.  
+以此实现自定义的运算符.  
+
+| 运算符 | 特殊方法 |
+| --- | --- |
+| +(一元) | `__pos__` |
+| -(一元) | `__neg__` |
+| not(一元) | `__not__` |
+| +(二元) | `__add__` |
+| -(二元) | `__sub__` |
+| * | `__mul__` |
+| / | `__truediv__` |
+| % | `__mod__` |
+| ** | `__pow__` |
+| == | `__eq__` |
+| != | `__ne__`  |
+| > | `__gt__` |
+| < | `__lt__` |
+| >= | `__ge__` |
+| <= | `__le__` |
+| and | `__and__` |
+| or | `__or__` |
+
+- 一元运算符与二元运算符:  
+    一元即对一个对象进行操作, 如: +5, -9...  
+    二元即对两个进行操作: list + list...  
+
+示例:
+```py
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        if isinstance(other, Vector):
+            new_x = self.x + other.x
+            new_y = self.y + other.y
+            return Vector(new_x, new_y)
+        else:
+            raise TypeError("Unsupported operand type.")
+
+# 创建两个 Vector 实例
+v1 = Vector(1, 2)
+v2 = Vector(3, 4)
+
+# 使用加法运算符相加
+result = v1 + v2
+
+# 输出结果
+print(result.x, result.y)  # 输出: 4 6
+```
+
+
 # PySpark的简单使用
 
 Spark是Apache基金会旗下的顶级开源项目, 用于对海量数据进行大规模分布式计算.PySpark是Spark提供的python第三方库, 用于Spark开发, 也可以将程序提交的Spark集群环境中, 调度大规模集群进行执行.  
