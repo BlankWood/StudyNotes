@@ -1,6 +1,6 @@
 
 配合教学视频食用口味更佳：  
-[《黑马程序员 Mysql数据库入门到精通》](https://www.bilibili.com/video/BV1Kr4y1i7ru)
+[《黑马程序员 Mysql数据库入门到精通》](https://www.bilibili.com/video/BV1Kr4y1i7ru)  
 
 # 基础篇
 
