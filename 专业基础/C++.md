@@ -1,4 +1,129 @@
 
+# 类与对象
+
+
+## 类的定义
+
+
+```c++
+class class_name{
+
+Access specifiers:    // 访问修饰符: private, public, protected
+	Data 
+	Function
+
+};
+```
+
+例:  
+```c++
+
+class Student{
+	public:
+		string name;
+		int ID;
+		
+		void showInfo(){
+			cout << "name: " << name << "\nID: " << ID << "\n";			
+		}
+		
+		void setInfo(string name, int ID){
+			this->name = name;
+			this->ID = ID;
+		}
+}
+
+int main(){
+    Student s1;
+
+	s1.name = "张三";
+	s1.ID = 12345;
+
+    s1.showInfo();
+    s1.setInfo("李四", 54321);
+    s1.showInfo();
+}
+```
+> 类方法也可以写在类外, 但要在类内声明, 并在方法名前声明其"命名空间", `class_name::func_name`.  
+
+
+## 构造与析构
+
+
+构造函数在创建类时自动调用, 析构函数在删除类时自动调用.  
+构造函数名需要与类名一致.  
+构造函数一般用来做类的
+
+```c++
+class Student{
+	public:
+		Student(string name, int ID){
+			this->name = name;
+			this->ID = ID;
+		}
+}
+```
+
+
+## 访问修饰符
+
+- public:  
+	公共区域, 可以从类内或类外访问并修改.  
+
+- privat:  
+	私有区域, 不能从类外访问, 不能继承.  
+
+- protected:  
+	受保护的区域, 不能从类外访问, 可以继承.  
+
+
+```c++
+#include<iostream>
+using namespace std;
+
+class Student{
+	private:
+		string name = "";
+		int ID = 0;
+	
+	public:
+		Student(string name, int ID){
+			this->name = name;
+			this->ID = ID;
+		}
+		
+		~Student(){
+		
+		}
+		
+		void showInfo(){
+			cout << "name: " << name << "\nID: " << ID << "\n";
+		}
+		
+		void setInfo(string name, int ID){
+			this->name = name;
+			this->ID = ID;
+		}
+};
+
+int main(){
+	Student s1("张三", 12345);
+	
+	# s1.name    # 错误
+	s1.showInfo();
+	s1.setInfo("李四", 54321);
+    s1.showInfo();
+}
+```
+
+私有属性使类能够被 "封装", 保护其数据, 提高安全性.  
+然后在公共区域提供访问和修改的方法.  
+
+
+## 继承
+
+
+
 
 
 # 容器
@@ -23,6 +148,7 @@
 自动拓展的动态数组
 
 ### 创建
+
 | 函数 | 说明 |
 | --- | --- |
 | vector() | 无参构造 |
@@ -32,12 +158,22 @@
 | vector(begin, end) | 指定拷贝区间 |
 
 ### 赋值
+
 | 函数 | 说明 |
 | - | - |
 | push_back() | 在数组尾端加入元素 |
 | insert(iterator it, const T &t) | 指定位置添加元素 |
 | assign(begin, end) | 将vector一部分赋值 |
 | assign(n, m) | 给vector赋值n个m |
+
+### vector的初始化
+
+指定大小与初始值:  
+`vector<int> v(size, value)`  
+
+附带不同的初始值:  
+`vector<int> v = {1, 2, 3, 4, 5}`  
+
 
 ## set容器
 ### 特点
@@ -113,3 +249,5 @@ ofs.close();
 | ios::app | 追加内容 |
 | ios::trunc | 如果文件存在, 则先删除再创建 |
 | ios::binary | 二进制方式 |
+
+

@@ -757,16 +757,19 @@ Python中有四种变量作用域: 局部作用域(Local), 嵌套作用域(Enclo
 
 ## 常用内置函数
 
-- filter(function, iterable):  
-    用于过滤序列, 即筛选元素, 返回符合条件的新列表.  
 
-    - 参数:    
-        function: 判断函数.  
-        iterable: 可迭代对象.  
-        将容器中的元素传入判断函数, 保留结果为 True 的元素.  
-    
-    - 返回值:  
-        一个容器: filter.  
+### Filter
+
+- filter(function, iterable):  
+	用于过滤序列, 即筛选元素, 返回符合条件的新列表.  
+
+- 参数:    
+	function: 判断函数.  
+	iterable: 可迭代对象.  
+	将容器中的元素传入判断函数, 保留结果为 True 的元素.  
+
+- 返回值:  
+	一个容器: filter.  
 
 示例:  
 ```python
@@ -775,6 +778,8 @@ odds = filter(lambda x: x%2==0, num)
 for i in odds:
     print(i, end=" ")
 ```
+
+### Eval
 
 - eval(express):  
     执行字符串表达式, 并返回其结果.  
@@ -790,35 +795,37 @@ a = 10
 a = eval("add_ten(a)")
 ```
 
+### Map
 
 - map(function, iterable, ...):  
-    将容器每个元素调用函数, 获取其返回值序列.  
+    将容器每个元素调用指定函数, 获取其返回值序列.  
     即批量处理.  
 
-    - 参数:  
-        function: 此函数的参数数量应与后面的容器个数相同.  
-        iterable: 一个或多个序列, 其大小(size)应一致, 否则按最小size处理.  
-    
+- 参数:  
+	function: 此函数的参数数量应与后面的容器个数相同.  
+	iterable: 一个或多个序列, 其大小(size)应一致, 否则按最小size处理.  
+
 示例:  
 ```python
 num_list = list(map(int, input().split()))
 """
-输入: 1 2 3 4 5 6 7 8 ...
+输入: 1 2 3 4 5 6 7 8
 input() 获取输入的字符串后, 用split()分割得到字符串列表.
 通过 map 对其中每一个字符串调用 int 函数转为数字.  
 用 list() 将返回的 map 对象转为列表.  
 """
 ```
 
-- reduce(function, iterable):  
-    在 functools 模块中.  
-    将 iterable 中的元素进行累积: 先将容器中第 1, 2 个元素应用于 func, 再将其结果与第三个元素应用于 func, 以此累积.  
+### Reduce
 
+- reduce(function, iterable):  
+    需要导入 functools 模块.  
+    将 iterable 中的元素进行累积: 先将容器中第 1, 2 个元素应用于 func, 再将其结果与第三个元素应用于 func, 以此累积.  
+	
     func 应有两个参数, 一个返回值.  
 
 例:  
 `sum = reduce(lambda x, y: x + y, [1, 2, 3, 4, 5])`
-
 
 
 ## 类与对象
@@ -1178,7 +1185,7 @@ python中可以通过重写魔术方法(内置方法)的方式改变运算符的
     二元即对两个进行操作: list + list...  
 
 示例:
-```py
+```python
 class Vector:
     def __init__(self, x, y):
         self.x = x
@@ -1206,11 +1213,55 @@ print(result.x, result.y)  # 输出: 4 6
 
 # PySpark的简单使用
 
-Spark是Apache基金会旗下的顶级开源项目, 用于对海量数据进行大规模分布式计算.PySpark是Spark提供的python第三方库, 用于Spark开发, 也可以将程序提交的Spark集群环境中, 调度大规模集群进行执行.  
+Spark是Apache基金会旗下的顶级开源项目, 用于对海量数据进行大规模分布式计算, 是全球顶级的分布式计算框架.  
+Spark的原生语言是Scala, 可以再去了解一下 "**hadoop**" 和 "**scala**".  
+PySpark是Spark提供的python第三方库, 用于Spark开发, 也可以将程序提交的Spark集群环境中, 调度大规模集群进行执行.  
 Spark是大数据开发的核心技术.  
 
+下载: `pip install pyspark`.  
+
+构建一个执行环境入口对象:  
+```python
+from pyspark import SparkConf, SparkContext  
+
+# setMaster: 运行主机(本地)
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")  
+sc = SparkContext(conf=conf)  
+print(sc.version)  
+sc.stop()
+```
 
 
+## RDD对象
+
+
+RDD: 弹性分布式数据集(Resilient Distribute Datasets).  
+PySpark对数据集的处理, 都是以RDD对象作为载体.  
+- 数据储存在RDD内.  
+- 各类数据的计算方法, 也是RDD的成员方法.  
+- RDD的数据计算方法, 返回值依然是RDD对象.  
+
+
+### RDD对象的构建
+
+
+1. 通过Python数据容器转RDD对象:  
+	`rdd = sc(SparkContext).parallelize(数据容器)`.  
+	通过rdd的collect()方法可以得到数据.  
+	
+```python
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")  
+sc = SparkContext(conf=conf)  
+rdd1 = sc.parallelize([1, 2, 3, 4, 5])  
+rdd2 = sc.parallelize("abcdefg")  
+rdd3 = sc.parallelize({"key1": "vlaue1", "key2": "value2"})  
+print(rdd1.collect())  
+print(rdd2.collect())  
+print(rdd3.collect())
+```
+
+2. 通过读取文件内容:  
+	`rdd = sc.textFile(file_path)`.  
 
 # python爬虫
 
@@ -1226,15 +1277,15 @@ Spark是大数据开发的核心技术.
 ## requests 库
 
 发送请求:  
-requests.get/post(url,params,data,headers,timeout,verify,allow_redirects,cookies)  
-    - url: 目标网页的URL.  
-    - params: 字典形式, 设置url后面的参数.  
-    - data: 字典或字符串, 一般用于post方法时提交数据.  
-    - headers: 设置user-agent, refer等的请求头.  
-    - timeout: 超时时间, 单位: s.  
-    - verify: 是否进行Https证书验证, 默认Ture.  
-    - allow_redirects: 是否让resquest做重定向, 默认Ture.  
-    - cookies: 附带本地的cookies数据.  
+`requests.get/post(url,params,data,headers,timeout,verify,allow_redirects,cookies)`  
+- url: 目标网页的URL.  
+- params: 字典形式, 设置url后面的参数.  
+- data: 字典或字符串, 一般用于post方法时提交数据.  
+- headers: 设置user-agent, refer等的请求头.  
+- timeout: 超时时间, 单位: s.  
+- verify: 是否进行Https证书验证, 默认Ture.  
+- allow_redirects: 是否让resquest做重定向, 默认Ture.  
+- cookies: 附带本地的cookies数据.  
 
 接收响应:  
 ```python

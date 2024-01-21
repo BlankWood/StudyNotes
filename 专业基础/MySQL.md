@@ -6,10 +6,11 @@
 
 ## 概念
 
-|      名称     | 解释                                | 英文名称                         |
-|     数据库    | 存储数据的仓库，数据是有组织地进行存储 | DataBase(DB)                     |
-| 数据库管理系统 | 操纵和管理数据库的大型软件            | DataBase Management System(DBMS) |
-|      SQL      | 操作关系型数据库的编程语言            | Structured Query Language(SQL)   |
+|      名称      |                  解释                  |             英文名称             |
+|:--------------:|:--------------------------------------:|:--------------------------------:|
+|     数据库     | 存储数据的仓库，数据是有组织地进行存储 |           DataBase(DB)           |
+| 数据库管理系统 |       操纵和管理数据库的大型软件       | DataBase Management System(DBMS) |
+|      SQL       |       操作关系型数据库的编程语言       |  Structured Query Language(SQL)  |
 
 关系数据库系统是支持关系模型的数据库系统，SQL是关系数据库的标准语言，Mysql是一个主流的关系型数据库操作系统之一。  
 关系模型可以认为是二维表。  
@@ -2032,12 +2033,13 @@ MySQL5.5版本开始, 默认使用InnoDB存储引擎, 它擅长事务处理, 具
 
 2. IO Thread  
 	在InnoDB存储引擎中大量使用了AIO(异步非阻塞IO)来处理IO请求, 这样可以极大地提高数据库地性能, 而IO Thread主要负责这些IO请求的回调.  
-	| 线程类型             | 默认个数 | 职责      |
-	| -------             | ------- | ----      |
-	| Read thread         |  4      | 负责读操作 |
-	| Write thread        |  4      | 负责写操作 |
-	| Log thread          |  1      | 负责将日志缓冲区刷新到磁盘 |
-	| Insert buffer thread |  1      | 负责将写缓冲区内容刷新到磁盘 |
+
+|       线程类型       | 默认个数 |             职责             |
+|:--------------------:|:--------:|:----------------------------:|
+|     Read thread      |    4     |          负责读操作          |
+|     Write thread     |    4     |          负责写操作          |
+|      Log thread      |    1     |  负责将日志缓冲区刷新到磁盘  |
+| Insert buffer thread |    1     | 负责将写缓冲区内容刷新到磁盘 |
 
 3. Purge Thread  
 	主要用于回收事务已提交了的undo log, 在事务提交之后, undo log可能不用了, 就用它来回收.  
@@ -2087,13 +2089,13 @@ undo log存储: undo log采用段的方式进行管理和记录, 存放在上文
 
 - 记录中的隐藏字段:  
 	在创建一张表时, 除了自己指定的字段, InnoDB还会自动添加三个隐式字段.  
-	|   隐藏字段   | 含义 |
-	|   -------   | ---- |
-	| DB_TRX_ID   | 最近修改事务ID, 记录插入这条记录或最后一次修改该记录的事务ID. |
-	| DB_ROLL_PTR | 回滚指针, 指向这条记录的上一个版本, 用于配合undo log, 指向上一个版本. |
-	| DB_ROW_ID   | 隐藏主键, 如果表结构没有指定主键, 将会生成该隐藏字段. |
-
 	查看指令: `ibd2sdi 表文件名`, 需要先进入其数据库中.  
+
+| 隐藏字段    | 含义                                                                  |
+| ----------- | --------------------------------------------------------------------- |
+| DB_TRX_ID   | 最近修改事务ID, 记录插入这条记录或最后一次修改该记录的事务ID.         |
+| DB_ROLL_PTR | 回滚指针, 指向这条记录的上一个版本, 用于配合undo log, 指向上一个版本. |
+| DB_ROW_ID   | 隐藏主键, 如果表结构没有指定主键, 将会生成该隐藏字段.                 |
 
 - undo log日志:  
 	回滚日志, 在insert, update, delete的时候产生的便于数据回滚的日志.  
@@ -2103,34 +2105,35 @@ undo log存储: undo log采用段的方式进行管理和记录, 存放在上文
 - undo log版本链:  
 	将各个版本按顺序形成链表.  
 	详细演示请查看教学视频:  
-	https://www.bilibili.com/video/BV1Kr4y1i7ru?p=143
+	[B站视频](https://www.bilibili.com/video/BV1Kr4y1i7ru?p=143)  
 
 - readView:  
 	读视图, 是快照读SQL执行时MVCC提取数据的依据, 记录并维护系统当前活跃的事务(未提交的)id.  
 	在执行select时生成readview.  
 	ReadView中包含了四个核心字段:  
-	| 字段           | 含义 |
-	| -----------    | ---- |
-	| m_ids          | 当前活跃的事务ID集合 |
-	| min_trx_id     | 最小活跃事务ID |
-	| max_trx_id     | 预分配事务ID, 当前最大事务ID+1(因为事务ID是自增的) |
-	| creator_trx_id | ReadView创建者的事务ID |
 
+| 字段           | 含义 |
+| -----------    | ---- |
+| m_ids          | 当前活跃的事务ID集合 |
+| min_trx_id     | 最小活跃事务ID |
+| max_trx_id     | 预分配事务ID, 当前最大事务ID+1(因为事务ID是自增的) |
+| creator_trx_id | ReadView创建者的事务ID |
 	访问规则:  
-	```
-	trx_id == creator_trx_id -> 可以访问该版本  
-	trx_id < min_trx_id      -> 可以访问该版本  
-	trx_id > max_trx_id      -> 不可以访问该版本  
-	min_trx_id <= trx_id <= max_trx_id -> 如果trx_id不在m_ids中是可以访问该版本的  
-	```
-
 	根据undo log日志链依次判断能否访问.  
+```
+trx_id == creator_trx_id -> 可以访问该版本  
+trx_id < min_trx_id      -> 可以访问该版本  
+trx_id > max_trx_id      -> 不可以访问该版本  
+min_trx_id <= trx_id <= max_trx_id -> 如果trx_id不在m_ids中是可以访问该版本的  
+```
+
 
 ## MySQL管理
 
 ### 系统数据库
 
 MySQL(8.0)安装完成后, 自带了以下四个数据库:  
+
 | 数据库 | 作用 |
 | ----- | ---- |
 | mysql | 存储MySQL服务器正常运行所需的各种信息(时区, 主从, 用户, 权限等) |
@@ -2212,6 +2215,7 @@ MySQL8版本中,二进制日志默认为开启,查看语句:
 
 - 日志格式  
 MySQL服务器中提供了多种格式来记录二进制日志  
+
 |  日志格式  | 含义 |
 |  -------  | ---- |
 | statement | 基于sql语句的日志记录,记录的是sql语句,对数据进行修改的sql都会记录在日志文件中 |
