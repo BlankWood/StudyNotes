@@ -159,12 +159,12 @@ int main(){
 
 ### 赋值
 
-| 函数 | 说明 |
-| - | - |
-| push_back() | 在数组尾端加入元素 |
-| insert(iterator it, const T &t) | 指定位置添加元素 |
-| assign(begin, end) | 将vector一部分赋值 |
-| assign(n, m) | 给vector赋值n个m |
+| 函数                              | 说明           |
+| ------------------------------- | ------------ |
+| push_back()                     | 在数组尾端加入元素    |
+| insert(iterator it, const T &t) | 指定位置添加元素     |
+| assign(begin, end)              | 将vector一部分赋值 |
+| assign(n, m)                    | 给vector赋值n个m |
 
 ### vector的初始化
 
